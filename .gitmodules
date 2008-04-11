@@ -1,0 +1,3 @@
+[submodule "resources/yui"]
+	path = resources/yui
+	url = git://github.com/rubaidh/yui.git
