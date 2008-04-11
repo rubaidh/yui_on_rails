@@ -9,7 +9,7 @@ namespace :yui_on_rails do
       plugin_yui_dir = "#{RAILS_ROOT}/vendor/plugins/yui_on_rails/resources/yui"
       public_yui_dir = "#{RAILS_ROOT}/public/yui"
 
-      FileUtils.ln_sf(plugin_yui_dir, public_yui_dir)
+      FileUtils.ln_s(plugin_yui_dir, public_yui_dir) unless File.exists?(public_yui_dir)
     end
   end
 end
