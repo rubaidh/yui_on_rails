@@ -25,22 +25,34 @@ module ActionView
         options[:pagedate] = array_or_string_for_javascript(datetime.strftime("%m/%Y"))    unless datetime.blank?
         options[:title] = array_or_string_for_javascript(options[:title]) unless options[:title].blank?
 
+        hidden_date_fields + div_tag_for_calendar + javascript_tag_for_calendar(options)
+      end
+
+      private
+      def calendar_div_id(options = {})
+        add_default_name_and_id(options)
+        options["id"]
+      end
+
+      def hidden_date_fields()
+        select_options = { :discard_type => true, :use_hidden => true }
+
         # FIXME: Magic numbers from #date_or_time_select's position hash.
-        select_options       = { :discard_type => true, :use_hidden => true }
-        calendar_select_tag  = select_year( datetime, options_with_prefix(1, select_options))
-        calendar_select_tag += select_month(datetime, options_with_prefix(2, select_options))
-        calendar_select_tag += select_day(  datetime, options_with_prefix(3, select_options))
+        select_year( value(object), options_with_prefix(1, select_options)) +
+        select_month(value(object), options_with_prefix(2, select_options)) +
+        select_day(  value(object), options_with_prefix(3, select_options))
+      end
 
-        calendar_select_tag_options = {}
-        add_default_name_and_id(calendar_select_tag_options)
+      def div_tag_for_calendar()
+        content_tag(:div, '', :id => calendar_div_id)
+      end
 
-        calendar_select_tag += content_tag(:div, '', :id => calendar_select_tag_options["id"])
-
+      def javascript_tag_for_calendar(options)
         namespace = "Rails.Calendar.#{object_name.camelize}.#{method_name.camelize}"
-        calendar_select_tag += javascript_tag <<-JS
+        javascript_tag <<-JS
           YAHOO.namespace('#{namespace}');
           YAHOO.#{namespace}.initializeCalendar = function() {
-            var theCalendar = new YAHOO.widget.Calendar('#{calendar_select_tag_options["id"]}', #{options_for_javascript(options)});
+            var theCalendar = new YAHOO.widget.Calendar('#{calendar_div_id}', #{options_for_javascript(options)});
 
             theCalendar.render();
 
@@ -56,11 +68,8 @@ module ActionView
 
           YAHOO.util.Event.onDOMReady(YAHOO.#{namespace}.initializeCalendar);
         JS
-
-        calendar_select_tag
       end
 
-      private
       def year_dom_id()
         # FIXME: Magic numbers from #date_or_time_select's position hash.
         options = options_with_prefix(1, { :discard_type => true })
