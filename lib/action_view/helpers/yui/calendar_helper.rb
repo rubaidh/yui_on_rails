@@ -15,13 +15,15 @@ module ActionView
       def to_calendar_select_tag(options = {}, html_options = {})
         defaults = {
           :navigator => true,
-          :start_weekday => 1
+          :start_weekday => 1,
+          :title => method_name.humanize
         }
         options = defaults.merge(options)
 
         datetime = value(object)
         options[:selected] = array_or_string_for_javascript(datetime.strftime("%m/%d/%Y")) unless datetime.blank?
         options[:pagedate] = array_or_string_for_javascript(datetime.strftime("%m/%Y"))    unless datetime.blank?
+        options[:title] = array_or_string_for_javascript(options[:title]) unless options[:title].blank?
 
         # FIXME: Magic numbers from #date_or_time_select's position hash.
         select_options       = { :discard_type => true, :use_hidden => true }
