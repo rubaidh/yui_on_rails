@@ -13,34 +13,32 @@ module ActionView
       include Helpers::FormHelper
 
       def to_calendar_select_tag(options = {}, html_options = {})
-        defaults = { :discard_type => true }
+        defaults = {
+          :navigator => true,
+          :start_weekday => 1
+        }
         options = defaults.merge(options)
 
         datetime = value(object)
+        options[:selected] = array_or_string_for_javascript(datetime.strftime("%m/%d/%Y")) unless datetime.blank?
+        options[:pagedate] = array_or_string_for_javascript(datetime.strftime("%m/%Y"))    unless datetime.blank?
 
-        calendar_select_tag = select_year(datetime, options_with_prefix(1, options.merge(:use_hidden => true)), html_options)
-        calendar_select_tag += select_month(datetime, options_with_prefix(2, options.merge(:use_hidden => true)), html_options)
-        calendar_select_tag += select_day(datetime, options_with_prefix(3, options.merge(:use_hidden => true)), html_options)
+        # FIXME: Magic numbers from #date_or_time_select's position hash.
+        select_options       = { :discard_type => true, :use_hidden => true }
+        calendar_select_tag  = select_year( datetime, options_with_prefix(1, select_options))
+        calendar_select_tag += select_month(datetime, options_with_prefix(2, select_options))
+        calendar_select_tag += select_day(  datetime, options_with_prefix(3, select_options))
 
-        add_default_name_and_id(options)
+        calendar_select_tag_options = {}
+        add_default_name_and_id(calendar_select_tag_options)
 
-        calendar_select_tag += content_tag(:div, '', :id => options["id"])
+        calendar_select_tag += content_tag(:div, '', :id => calendar_select_tag_options["id"])
 
         namespace = "Rails.Calendar.#{object_name.camelize}.#{method_name.camelize}"
         calendar_select_tag += javascript_tag <<-JS
           YAHOO.namespace('#{namespace}');
           YAHOO.#{namespace}.initializeCalendar = function() {
-
-            var day        = YAHOO.util.Dom.get("#{day_dom_id(options)}").value;
-            var month      = YAHOO.util.Dom.get("#{month_dom_id(options)}").value;
-            var year       = YAHOO.util.Dom.get("#{year_dom_id(options)}").value;
-            var dateString = month + "/" + day + "/" + year;
-
-            var theCalendar = new YAHOO.widget.Calendar('#{options["id"]}', {
-              navigator: true,
-              start_weekday: 1,
-              selected: dateString
-            });
+            var theCalendar = new YAHOO.widget.Calendar('#{calendar_select_tag_options["id"]}', #{options_for_javascript(options)});
 
             theCalendar.render();
 
@@ -48,17 +46,9 @@ module ActionView
               var dates = args[0];
               var date = dates[0];
 
-              var dayField   = YAHOO.util.Dom.get("#{day_dom_id(options)}");
-              var monthField = YAHOO.util.Dom.get("#{month_dom_id(options)}");
-              var yearField  = YAHOO.util.Dom.get("#{year_dom_id(options)}");
-
-              var day   = date[2];
-              var month = date[1];
-              var year  = date[0];
-
-              dayField.value   = day;
-              monthField.value = month;
-              yearField.value  = year;
+              YAHOO.util.Dom.get("#{day_dom_id}").value   = date[2];
+              YAHOO.util.Dom.get("#{month_dom_id}").value = date[1];
+              YAHOO.util.Dom.get("#{year_dom_id}").value  = date[0];
             });
           }
 
@@ -69,23 +59,23 @@ module ActionView
       end
 
       private
-      def year_dom_id(options = {})
+      def year_dom_id()
         # FIXME: Magic numbers from #date_or_time_select's position hash.
-        options = options_with_prefix(1, options)
+        options = options_with_prefix(1, { :discard_type => true })
         name_and_id_from_options(options, 'year')
         options[:id]
       end
 
-      def month_dom_id(options = {})
+      def month_dom_id()
         # FIXME: Magic numbers from #date_or_time_select's position hash.
-        options = options_with_prefix(2, options)
+        options = options_with_prefix(2, { :discard_type => true })
         name_and_id_from_options(options, 'month')
         options[:id]
       end
 
-      def day_dom_id(options = {})
+      def day_dom_id()
         # FIXME: Magic numbers from #date_or_time_select's position hash.
-        options = options_with_prefix(3, options)
+        options = options_with_prefix(3, { :discard_type => true })
         name_and_id_from_options(options, 'day')
         options[:id]
       end
