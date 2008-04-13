@@ -21,9 +21,16 @@ module ActionView
         options = defaults.merge(options)
 
         datetime = value(object)
-        options[:selected] = array_or_string_for_javascript(datetime.strftime("%m/%d/%Y")) unless datetime.blank?
-        options[:pagedate] = array_or_string_for_javascript(datetime.strftime("%m/%Y"))    unless datetime.blank?
-        options[:title] = array_or_string_for_javascript(options[:title]) unless options[:title].blank?
+
+        options[:selected]        = array_or_string_for_javascript(datetime.strftime("%m/%d/%Y")) unless datetime.blank?
+        options[:pagedate]        = array_or_string_for_javascript(datetime.strftime("%m/%Y"))    unless datetime.blank?
+        options[:title]           = array_or_string_for_javascript(options[:title]) unless options[:title].blank?
+        options[:mindate]         = array_or_string_for_javascript(options[:mindate].respond_to?(:strftime) ? options[:mindate].strftime("%m/%d/%Y") : options[:mindate]) unless options[:mindate].blank?
+        options[:maxdate]         = array_or_string_for_javascript(options[:maxdate].respond_to?(:strftime) ? options[:maxdate].strftime("%m/%d/%Y") : options[:maxdate]) unless options[:maxdate].blank?
+        options[:locale_months]   = array_or_string_for_javascript(options[:locale_months]) unless options[:locale_months].blank?
+        options[:locale_weekdays] = array_or_string_for_javascript(options[:locale_weekdays]) unless options[:locale_weekdays].blank?
+        options[:nav_arrow_left]  = array_or_string_for_javascript(options[:nav_arrow_left]) unless options[:nav_arrow_left].blank?
+        options[:nav_arrow_right] = array_or_string_for_javascript(options[:nav_arrow_right]) unless options[:nav_arrow_right].blank?
 
         hidden_date_fields + div_tag_for_calendar + javascript_tag_for_calendar(options)
       end
