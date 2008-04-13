@@ -1,13 +1,12 @@
-YuiOnRails
-==========
+= YUI On Rails
 
-Introduction goes here.
+Here is a lovely little plugin which makes it less painful to use YUI with
+Rails. Coming from a Rails background, we rather like all the helpers that
+make it easy to use Prototype and Scriptaculous without actually having to
+write Javascript code, don't we? This will be the equivalent (as I need to use
+bits of it!) for the Yahoo! UI library.
 
-
-Example
-=======
-
-Example goes here.
-
-
-Copyright (c) 2008 [name of plugin creator], released under the MIT license
+Copyright (c) 2008 Rubaidh Ltd, released under the MIT license. The Yahoo! UI
+library itself, which is included with this plugin, is copyright (c) 2008
+Yahoo! Inc, released under the BSD license. See
+http://developer.yahoo.net/yui/license.txt for full details.

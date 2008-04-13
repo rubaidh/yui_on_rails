@@ -1,4 +1,4 @@
-Copyright (c) 2008 [name of plugin creator]
+Copyright (c) 2008 Rubaidh Ltd.
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
@@ -18,3 +18,7 @@ NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
 LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+The Yahoo! UI library itself, which is included with this plugin, is copyright
+(c) 2008 Yahoo! Inc, released under the BSD license. See
+http://developer.yahoo.net/yui/license.txt for full details.
