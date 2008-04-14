@@ -75,6 +75,9 @@ module ActionView # :nodoc:
         def yui_javascript_include(*components)
           options = components.extract_options!
 
+          # Stringify components
+          components = components.map { |c| c.to_s }
+
           paths = components_with_dependencies(components).map do |component|
             yui_javascript_path(component)
           end
