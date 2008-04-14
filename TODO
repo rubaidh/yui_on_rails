@@ -1,0 +1,11 @@
+= TODO list
+
+== Asset tag helper
+
+* Automatic rollup of JS files if appropriate (ie if we're asking for the
+  minified version and all the components are included).
+
+* Use the YUI asset hosts if appropriate. I'm not entirely sure what
+  appropriate is in this context though; definitely not in development or
+  testing! Probably a configuration option to allow people to switch it on in
+  production.
