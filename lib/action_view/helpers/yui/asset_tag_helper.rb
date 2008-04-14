@@ -17,6 +17,8 @@ module ActionView # :nodoc:
         ].freeze
         EXPERIMENTAL_JS_COMPONENTS = ["charts", "uploader"].freeze
         JS_COMPONENTS = (STABLE_JS_COMPONENTS + BETA_JS_COMPONENTS + EXPERIMENTAL_JS_COMPONENTS).sort.freeze
+        JS_COMPONENTS_WITHOUT_DEBUG_VERSION =    ["utilities", "yahoo-dom-event", "yuiloader-dom-event"]
+        JS_COMPONENTS_WITHOUT_MINIFIED_VERSION = ["utilities", "yahoo-dom-event", "yuiloader-dom-event"]
 
         # All the dependencies of each YUI component.  This is cribbed from
         # playing around with:
@@ -65,9 +67,12 @@ module ActionView # :nodoc:
 
         CSS_COMPONENTS = [ "base", "fonts", "grids", "reset", "reset-fonts", "reset-fonts-grids"]
 
-        def yui_javascript_path(source)
-          suffix = "-beta" if BETA_JS_COMPONENTS.include?(source)
-          suffix = "-experimental" if EXPERIMENTAL_JS_COMPONENTS.include?(source)
+        def yui_javascript_path(source, version = nil)
+          suffix = ""
+          suffix += "-beta"         if BETA_JS_COMPONENTS.include?(source)
+          suffix += "-experimental" if EXPERIMENTAL_JS_COMPONENTS.include?(source)
+          suffix += "-debug"        if "#{version}" == "debug" && !JS_COMPONENTS_WITHOUT_DEBUG_VERSION.include?(source)
+          suffix += "-min"          if "#{version}" == "min"   && !JS_COMPONENTS_WITHOUT_MINIFIED_VERSION.include?(source)
 
           compute_public_path("#{source}#{suffix}", "yui/build/#{source}", 'js')
         end

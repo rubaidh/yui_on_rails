@@ -12,37 +12,73 @@ class AssetTagHelperTest < Test::Unit::TestCase
   include ActionView::Helpers::YUI::AssetTagHelper
 
   def test_yui_javascript_path_generates_correct_paths
-    stable_js_components = [ "animation", "autocomplete",
-      "button", "calendar", "colorpicker", "connection",
-      "container", "dom",
-      "dragdrop", "event", "get",
-      "history", "imageloader", "json",
-      "logger", "menu",
-      "slider",
-      "tabview", "treeview", "utilities", "yahoo",
-      "yahoo-dom-event", "yuiloader-dom-event", "yuitest"
-    ]
-    beta_js_components = [ "cookie", "datasource", "datatable", "editor",
-      "element", "imagecropper", "layout", "profiler", "profilerviewer",
-      "resize", "selector", "yuiloader"
-    ]
-    experimental_js_components = ["charts", "uploader"]
-
-    stable_js_components.each do |component|
+    STABLE_JS_COMPONENTS.each do |component|
       path = yui_javascript_path(component)
       assert_equal "/yui/build/#{component}/#{component}.js", path
       assert_file_exists "#{File.dirname(__FILE__)}/../../resources#{path}"
     end
 
-    beta_js_components.each do |component|
+    BETA_JS_COMPONENTS.each do |component|
       path = yui_javascript_path(component)
       assert_equal "/yui/build/#{component}/#{component}-beta.js", path
       assert_file_exists "#{File.dirname(__FILE__)}/../../resources#{path}"
     end
 
-    experimental_js_components.each do |component|
+    EXPERIMENTAL_JS_COMPONENTS.each do |component|
       path = yui_javascript_path(component)
       assert_equal "/yui/build/#{component}/#{component}-experimental.js", path
+      assert_file_exists "#{File.dirname(__FILE__)}/../../resources#{path}"
+    end
+  end
+
+  def test_yui_javascript_path_generates_correct_paths_for_debug_versions
+    (STABLE_JS_COMPONENTS - JS_COMPONENTS_WITHOUT_DEBUG_VERSION).each do |component|
+      path = yui_javascript_path(component, :debug)
+      assert_equal "/yui/build/#{component}/#{component}-debug.js", path
+      assert_file_exists "#{File.dirname(__FILE__)}/../../resources#{path}"
+    end
+
+    BETA_JS_COMPONENTS.each do |component|
+      path = yui_javascript_path(component, :debug)
+      assert_equal "/yui/build/#{component}/#{component}-beta-debug.js", path
+      assert_file_exists "#{File.dirname(__FILE__)}/../../resources#{path}"
+    end
+
+    EXPERIMENTAL_JS_COMPONENTS.each do |component|
+      path = yui_javascript_path(component, :debug)
+      assert_equal "/yui/build/#{component}/#{component}-experimental-debug.js", path
+      assert_file_exists "#{File.dirname(__FILE__)}/../../resources#{path}"
+    end
+
+    JS_COMPONENTS_WITHOUT_DEBUG_VERSION.each do |component|
+      path = yui_javascript_path(component, :debug)
+      assert_equal "/yui/build/#{component}/#{component}.js", path
+      assert_file_exists "#{File.dirname(__FILE__)}/../../resources#{path}"
+    end
+  end
+
+  def test_yui_javascript_path_generates_correct_paths_for_minified_versions
+    (STABLE_JS_COMPONENTS - JS_COMPONENTS_WITHOUT_MINIFIED_VERSION).each do |component|
+      path = yui_javascript_path(component, :min)
+      assert_equal "/yui/build/#{component}/#{component}-min.js", path
+      assert_file_exists "#{File.dirname(__FILE__)}/../../resources#{path}"
+    end
+
+    BETA_JS_COMPONENTS.each do |component|
+      path = yui_javascript_path(component, :min)
+      assert_equal "/yui/build/#{component}/#{component}-beta-min.js", path
+      assert_file_exists "#{File.dirname(__FILE__)}/../../resources#{path}"
+    end
+
+    EXPERIMENTAL_JS_COMPONENTS.each do |component|
+      path = yui_javascript_path(component, :min)
+      assert_equal "/yui/build/#{component}/#{component}-experimental-min.js", path
+      assert_file_exists "#{File.dirname(__FILE__)}/../../resources#{path}"
+    end
+
+    JS_COMPONENTS_WITHOUT_MINIFIED_VERSION.each do |component|
+      path = yui_javascript_path(component, :min)
+      assert_equal "/yui/build/#{component}/#{component}.js", path
       assert_file_exists "#{File.dirname(__FILE__)}/../../resources#{path}"
     end
   end
