@@ -48,9 +48,58 @@ class AssetTagHelperTest < Test::Unit::TestCase
   end
 
   def test_yui_javascript_include_inserts_correct_script_tags
-    assert_dom_equal %(<script type="text/javascript" src="/yui/build/animation/animation.js"></script>), yui_javascript_include(:animation)
-    assert_dom_equal %(<script type="text/javascript" src="/yui/build/animation/animation.js"></script>\n<script type="text/javascript" src="/yui/build/autocomplete/autocomplete.js"></script>), yui_javascript_include(:animation, :autocomplete)
+    assert_dom_equal %(<script type="text/javascript" src="/yui/build/yahoo/yahoo.js"></script>), yui_javascript_include(:yahoo)
+    assert_dom_equal [
+      %(<script type="text/javascript" src="/yui/build/yahoo/yahoo.js"></script>),
+      %(<script type="text/javascript" src="/yui/build/utilities/utilities.js"></script>)
+    ].join("\n"), yui_javascript_include(:yahoo, :utilities)
   end
+
+  def test_yui_javascript_include_inserts_correct_script_tags_with_dependencies
+    assert_dom_equal [
+      %(<script type="text/javascript" src="/yui/build/yahoo/yahoo.js"></script>),
+      %(<script type="text/javascript" src="/yui/build/dom/dom.js"></script>),
+      %(<script type="text/javascript" src="/yui/build/event/event.js"></script>),
+      %(<script type="text/javascript" src="/yui/build/animation/animation.js"></script>)
+    ].join("\n"), yui_javascript_include(:animation)
+
+    assert_dom_equal [
+      %(<script type="text/javascript" src="/yui/build/yahoo/yahoo.js"></script>),
+      %(<script type="text/javascript" src="/yui/build/dom/dom.js"></script>),
+      %(<script type="text/javascript" src="/yui/build/event/event.js"></script>),
+      %(<script type="text/javascript" src="/yui/build/container/container.js"></script>),
+      %(<script type="text/javascript" src="/yui/build/menu/menu.js"></script>),
+      %(<script type="text/javascript" src="/yui/build/element/element-beta.js"></script>),
+      %(<script type="text/javascript" src="/yui/build/button/button.js"></script>),
+      %(<script type="text/javascript" src="/yui/build/editor/editor-beta.js"></script>)
+    ].join("\n"), yui_javascript_include(:editor)
+  end
+
+  def test_dependencies_for_component
+    assert_equal [], dependencies_for_component("yahoo")
+    assert_equal ["yahoo"], dependencies_for_component("dom")
+    assert_equal ["yahoo", "dom", "event"], dependencies_for_component("animation")
+    assert_equal ["yahoo", "dom", "event", "container", "menu", "element", "button"], dependencies_for_component("editor")
+  end
+
+  def test_component_with_dependencies
+    assert_equal ["yahoo"],                                                                     component_with_dependencies("yahoo")
+    assert_equal ["yahoo", "dom"],                                                              component_with_dependencies("dom")
+    assert_equal ["yahoo", "dom", "event", "animation"],                                        component_with_dependencies("animation")
+    assert_equal ["yahoo", "dom", "event", "container", "menu", "element", "button", "editor"], component_with_dependencies("editor")
+  end
+
+  def test_components_with_dependencies
+    assert_equal ["yahoo"],                                                                     components_with_dependencies("yahoo")
+    assert_equal ["yahoo", "dom"],                                                              components_with_dependencies("dom")
+    assert_equal ["yahoo", "dom", "event", "animation"],                                        components_with_dependencies("animation")
+    assert_equal ["yahoo", "dom", "event", "container", "menu", "element", "button", "editor"], components_with_dependencies("editor")
+
+    assert_equal ["yahoo", "dom", "event", "animation", "container", "menu", "element", "button", "editor"], components_with_dependencies(["animation", "editor"])
+    assert_equal ["yahoo", "dom", "event", "container", "menu", "element", "button", "editor", "animation"], components_with_dependencies(["editor", "animation"])
+    assert_equal ["yahoo", "dom", "event", "animation", "container", "menu", "element", "button", "editor"], components_with_dependencies(["dom", "animation", "editor"])
+  end
+
   private
   def assert_file_exists(file)
     assert File.exists?(file), "File #{file} does not exist."

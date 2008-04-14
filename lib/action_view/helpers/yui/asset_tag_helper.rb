@@ -86,9 +86,16 @@ module ActionView # :nodoc:
           javascript_include_tag(*paths)
         end
 
-        private
         def components_with_dependencies(components)
-          components.map { |component| (JS_COMPONENT_DEPENDENCIES[component] || []) + [component] }.uniq
+          components.map { |c| component_with_dependencies(c) }.flatten.uniq
+        end
+
+        def component_with_dependencies(component)
+          dependencies_for_component(component) + [component]
+        end
+
+        def dependencies_for_component(component)
+          JS_COMPONENT_DEPENDENCIES[component] || []
         end
       end
     end
