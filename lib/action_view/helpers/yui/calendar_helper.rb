@@ -1,14 +1,34 @@
-module ActionView
-  module Helpers
-    module YUI
+module ActionView # :nodoc:
+  module Helpers # :nodoc:
+    module YUI # :nodoc:
       module CalendarHelper
+
+        # Creates a Yahoo! UI calendar widget for the associated form date
+        # field.  It will show the currently selected date and submits the
+        # selected date back in a mechanism suitable for Rails to understand
+        # it (ie the same way as regular +date_select+ fields are done).
+        #
+        # Example:
+        #
+        #   <% form_for @post do |f| %>
+        #     <%= f.calendar_select :published_at
+        #   <% end %>
+        #
+        # Options:
+        #
+        # These are some of the options that the calendar can take; see the
+        # YUI developer documentation for full details.
+        #
+        # +title+: The title of the calendar control.  Defaults to the
+        # humanized version of the field name.  If you explicitly set it to
+        # blank (and don't set +close+) then the title bar will be omitted.
         def calendar_select(object_name, method, options = {}, html_options = {})
           InstanceTag.new(object_name, method, self, nil, options.delete(:object)).to_calendar_select_tag(options, html_options)
         end
       end
     end
 
-    class InstanceTag
+    class InstanceTag # :nodoc:
       include Helpers::JavaScriptHelper
       include Helpers::FormHelper
 
@@ -100,7 +120,7 @@ module ActionView
 
     end
 
-    class FormBuilder
+    class FormBuilder # :nodoc:
       def calendar_select(method, options = {}, html_options = {})
         @template.calendar_select(@object_name, method, options.merge(:object => @object))
       end
