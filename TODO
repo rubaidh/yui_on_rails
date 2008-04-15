@@ -9,3 +9,10 @@
   appropriate is in this context though; definitely not in development or
   testing! Probably a configuration option to allow people to switch it on in
   production.
+
+* Devise a sane behaviour for ":cache => true" -- we probably want to extract
+  the cache option and modify it slightly so that the cached file doesn't get
+  called all.js.
+
+* Automatically incorporate CSS assets for Javascript components if required.
+  Allow people to specify a skin option for these assets.
