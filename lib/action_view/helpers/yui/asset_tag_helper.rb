@@ -83,7 +83,7 @@ module ActionView # :nodoc:
           # Stringify components
           components = components.map { |c| c.to_s }
 
-          paths = components_with_dependencies(components).map do |component|
+          paths = yui_js_components_with_dependencies(components).map do |component|
             yui_javascript_path(component)
           end
 
@@ -91,15 +91,15 @@ module ActionView # :nodoc:
           javascript_include_tag(*paths)
         end
 
-        def components_with_dependencies(components)
-          components.map { |c| component_with_dependencies(c) }.flatten.uniq
+        def yui_js_components_with_dependencies(components)
+          components.map { |c| yui_js_component_with_dependencies(c) }.flatten.uniq
         end
 
-        def component_with_dependencies(component)
-          dependencies_for_component(component) + [component]
+        def yui_js_component_with_dependencies(component)
+          yui_js_dependencies_for_component(component) + [component]
         end
 
-        def dependencies_for_component(component)
+        def yui_js_dependencies_for_component(component)
           JS_COMPONENT_DEPENDENCIES[component] || []
         end
       end

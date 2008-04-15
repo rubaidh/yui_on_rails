@@ -112,28 +112,28 @@ class AssetTagHelperTest < Test::Unit::TestCase
   end
 
   def test_dependencies_for_component
-    assert_equal [], dependencies_for_component("yahoo")
-    assert_equal ["yahoo"], dependencies_for_component("dom")
-    assert_equal ["yahoo", "dom", "event"], dependencies_for_component("animation")
-    assert_equal ["yahoo", "dom", "event", "container", "menu", "element", "button"], dependencies_for_component("editor")
+    assert_equal [],                                                                  yui_js_dependencies_for_component("yahoo")
+    assert_equal ["yahoo"],                                                           yui_js_dependencies_for_component("dom")
+    assert_equal ["yahoo", "dom", "event"],                                           yui_js_dependencies_for_component("animation")
+    assert_equal ["yahoo", "dom", "event", "container", "menu", "element", "button"], yui_js_dependencies_for_component("editor")
   end
 
   def test_component_with_dependencies
-    assert_equal ["yahoo"],                                                                     component_with_dependencies("yahoo")
-    assert_equal ["yahoo", "dom"],                                                              component_with_dependencies("dom")
-    assert_equal ["yahoo", "dom", "event", "animation"],                                        component_with_dependencies("animation")
-    assert_equal ["yahoo", "dom", "event", "container", "menu", "element", "button", "editor"], component_with_dependencies("editor")
+    assert_equal ["yahoo"],                                                                     yui_js_component_with_dependencies("yahoo")
+    assert_equal ["yahoo", "dom"],                                                              yui_js_component_with_dependencies("dom")
+    assert_equal ["yahoo", "dom", "event", "animation"],                                        yui_js_component_with_dependencies("animation")
+    assert_equal ["yahoo", "dom", "event", "container", "menu", "element", "button", "editor"], yui_js_component_with_dependencies("editor")
   end
 
   def test_components_with_dependencies
-    assert_equal ["yahoo"],                                                                     components_with_dependencies("yahoo")
-    assert_equal ["yahoo", "dom"],                                                              components_with_dependencies("dom")
-    assert_equal ["yahoo", "dom", "event", "animation"],                                        components_with_dependencies("animation")
-    assert_equal ["yahoo", "dom", "event", "container", "menu", "element", "button", "editor"], components_with_dependencies("editor")
+    assert_equal ["yahoo"],                                                                     yui_js_components_with_dependencies("yahoo")
+    assert_equal ["yahoo", "dom"],                                                              yui_js_components_with_dependencies("dom")
+    assert_equal ["yahoo", "dom", "event", "animation"],                                        yui_js_components_with_dependencies("animation")
+    assert_equal ["yahoo", "dom", "event", "container", "menu", "element", "button", "editor"], yui_js_components_with_dependencies("editor")
 
-    assert_equal ["yahoo", "dom", "event", "animation", "container", "menu", "element", "button", "editor"], components_with_dependencies(["animation", "editor"])
-    assert_equal ["yahoo", "dom", "event", "container", "menu", "element", "button", "editor", "animation"], components_with_dependencies(["editor", "animation"])
-    assert_equal ["yahoo", "dom", "event", "animation", "container", "menu", "element", "button", "editor"], components_with_dependencies(["dom", "animation", "editor"])
+    assert_equal ["yahoo", "dom", "event", "animation", "container", "menu", "element", "button", "editor"], yui_js_components_with_dependencies(["animation", "editor"])
+    assert_equal ["yahoo", "dom", "event", "container", "menu", "element", "button", "editor", "animation"], yui_js_components_with_dependencies(["editor", "animation"])
+    assert_equal ["yahoo", "dom", "event", "animation", "container", "menu", "element", "button", "editor"], yui_js_components_with_dependencies(["dom", "animation", "editor"])
   end
 
   private
