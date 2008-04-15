@@ -66,6 +66,7 @@ module ActionView # :nodoc:
         }
 
         CSS_COMPONENTS = [ "base", "fonts", "grids", "reset", "reset-fonts", "reset-fonts-grids"]
+        CSS_COMPONENTS_WITHOUT_MINIFIED_VERSION = [ "reset-fonts", "reset-fonts-grids"]
 
         def yui_javascript_path(source, version = nil)
           suffix = ""
@@ -101,6 +102,11 @@ module ActionView # :nodoc:
 
         def yui_js_dependencies_for_component(component)
           JS_COMPONENT_DEPENDENCIES[component] || []
+        end
+
+        def yui_stylesheet_path(source, version = nil)
+          suffix = "-min" if "#{version}" == "min" && !CSS_COMPONENTS_WITHOUT_MINIFIED_VERSION.include?(source)
+          compute_public_path("#{source}#{suffix}", "yui/build/#{source}", 'css')
         end
       end
     end

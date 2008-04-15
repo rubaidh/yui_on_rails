@@ -136,6 +136,28 @@ class AssetTagHelperTest < Test::Unit::TestCase
     assert_equal ["yahoo", "dom", "event", "animation", "container", "menu", "element", "button", "editor"], yui_js_components_with_dependencies(["dom", "animation", "editor"])
   end
 
+  def test_yui_stylesheet_path_generates_correct_paths
+    CSS_COMPONENTS.each do |component|
+      path = yui_stylesheet_path(component)
+      assert_equal "/yui/build/#{component}/#{component}.css", path
+      assert_file_exists "#{File.dirname(__FILE__)}/../../resources#{path}"
+    end
+  end
+
+  def test_yui_stylesheet_path_generates_correct_paths_for_minified_versions
+    (CSS_COMPONENTS - CSS_COMPONENTS_WITHOUT_MINIFIED_VERSION).each do |component|
+      path = yui_stylesheet_path(component, :min)
+      assert_equal "/yui/build/#{component}/#{component}-min.css", path
+      assert_file_exists "#{File.dirname(__FILE__)}/../../resources#{path}"
+    end
+
+    CSS_COMPONENTS_WITHOUT_MINIFIED_VERSION.each do |component|
+      path = yui_stylesheet_path(component, :min)
+      assert_equal "/yui/build/#{component}/#{component}.css", path
+      assert_file_exists "#{File.dirname(__FILE__)}/../../resources#{path}"
+    end
+  end
+
   private
   def assert_file_exists(file)
     assert File.exists?(file), "File #{file} does not exist."
