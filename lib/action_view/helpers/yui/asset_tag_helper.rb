@@ -20,6 +20,25 @@ module ActionView # :nodoc:
         JS_COMPONENTS_WITHOUT_DEBUG_VERSION    = ["utilities", "yahoo-dom-event", "yuiloader-dom-event"]
         JS_COMPONENTS_WITHOUT_MINIFIED_VERSION = ["utilities", "yahoo-dom-event", "yuiloader-dom-event"]
 
+        JS_COMPONENTS_WITH_CSS = [
+          "autocomplete",
+          "button",
+          "calendar",
+          "colorpicker",
+          "container",
+          "datatable",
+          "editor",
+          "imagecropper",
+          "layout",
+          "logger",
+          "menu",
+          "profilerviewer",
+          "resize",
+          "tabview",
+          "treeview",
+          "yuitest"
+        ]
+
         # All the dependencies of each YUI component.  This is cribbed from
         # playing around with:
         #
@@ -87,9 +106,19 @@ module ActionView # :nodoc:
           paths = yui_js_components_with_dependencies(components).map do |component|
             yui_javascript_path(component)
           end
+          component_stylesheets = components.select do |component|
+            JS_COMPONENTS_WITH_CSS.include?(component)
+          end
 
-          paths << options
-          javascript_include_tag(*paths)
+          returning [] do |html|
+            html << javascript_include_tag(*paths)
+            unless component_stylesheets.blank?
+              stylesheet_paths = component_stylesheets.map do |component_stylesheet|
+                yui_js_stylesheet_path(component_stylesheet)
+              end
+              html << stylesheet_link_tag(*stylesheet_paths)
+            end
+          end.join("\n")
         end
 
         def yui_js_components_with_dependencies(components)
@@ -102,6 +131,10 @@ module ActionView # :nodoc:
 
         def yui_js_dependencies_for_component(component)
           JS_COMPONENT_DEPENDENCIES[component] || []
+        end
+
+        def yui_js_stylesheet_path(source)
+          compute_public_path(source, "yui/build/#{source}/assets/skins/sam", 'css')
         end
 
         def yui_stylesheet_path(source, version = nil)

@@ -107,8 +107,19 @@ class AssetTagHelperTest < Test::Unit::TestCase
       %(<script type="text/javascript" src="/yui/build/menu/menu.js"></script>),
       %(<script type="text/javascript" src="/yui/build/element/element-beta.js"></script>),
       %(<script type="text/javascript" src="/yui/build/button/button.js"></script>),
-      %(<script type="text/javascript" src="/yui/build/editor/editor-beta.js"></script>)
+      %(<script type="text/javascript" src="/yui/build/editor/editor-beta.js"></script>),
+      %(<link href="/yui/build/editor/assets/skins/sam/editor.css" rel="stylesheet" type="text/css" media="screen" />)
     ].join("\n"), yui_javascript_include_tag(:editor)
+  end
+
+  def test_yui_javascript_include_tag_also_includes_component_stylesheets
+    assert_dom_equal [
+      %(<script type="text/javascript" src="/yui/build/yahoo/yahoo.js"></script>),
+      %(<script type="text/javascript" src="/yui/build/dom/dom.js"></script>),
+      %(<script type="text/javascript" src="/yui/build/event/event.js"></script>),
+      %(<script type="text/javascript" src="/yui/build/autocomplete/autocomplete.js"></script>),
+      %(<link href="/yui/build/autocomplete/assets/skins/sam/autocomplete.css" rel="stylesheet" type="text/css" media="screen" />)
+    ].join("\n"), yui_javascript_include_tag(:autocomplete)
   end
 
   def test_dependencies_for_component
@@ -154,6 +165,14 @@ class AssetTagHelperTest < Test::Unit::TestCase
     CSS_COMPONENTS_WITHOUT_MINIFIED_VERSION.each do |component|
       path = yui_stylesheet_path(component, :min)
       assert_equal "/yui/build/#{component}/#{component}.css", path
+      assert_file_exists "#{File.dirname(__FILE__)}/../../resources#{path}"
+    end
+  end
+
+  def test_yui_js_stylesheet_path_generates_correct_paths
+    JS_COMPONENTS_WITH_CSS.each do |component|
+      path = yui_js_stylesheet_path(component)
+      assert_equal "/yui/build/#{component}/assets/skins/sam/#{component}.css", path
       assert_file_exists "#{File.dirname(__FILE__)}/../../resources#{path}"
     end
   end
