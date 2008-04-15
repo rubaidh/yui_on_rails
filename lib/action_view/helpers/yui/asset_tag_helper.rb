@@ -17,7 +17,7 @@ module ActionView # :nodoc:
         ].freeze
         EXPERIMENTAL_JS_COMPONENTS = ["charts", "uploader"].freeze
         JS_COMPONENTS = (STABLE_JS_COMPONENTS + BETA_JS_COMPONENTS + EXPERIMENTAL_JS_COMPONENTS).sort.freeze
-        JS_COMPONENTS_WITHOUT_DEBUG_VERSION =    ["utilities", "yahoo-dom-event", "yuiloader-dom-event"]
+        JS_COMPONENTS_WITHOUT_DEBUG_VERSION    = ["utilities", "yahoo-dom-event", "yuiloader-dom-event"]
         JS_COMPONENTS_WITHOUT_MINIFIED_VERSION = ["utilities", "yahoo-dom-event", "yuiloader-dom-event"]
 
         # All the dependencies of each YUI component.  This is cribbed from
