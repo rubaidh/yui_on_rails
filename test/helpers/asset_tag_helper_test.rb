@@ -83,21 +83,21 @@ class AssetTagHelperTest < Test::Unit::TestCase
     end
   end
 
-  def test_yui_javascript_include_inserts_correct_script_tags
-    assert_dom_equal %(<script type="text/javascript" src="/yui/build/yahoo/yahoo.js"></script>), yui_javascript_include(:yahoo)
+  def test_yui_javascript_include_tag_inserts_correct_script_tags
+    assert_dom_equal %(<script type="text/javascript" src="/yui/build/yahoo/yahoo.js"></script>), yui_javascript_include_tag(:yahoo)
     assert_dom_equal [
       %(<script type="text/javascript" src="/yui/build/yahoo/yahoo.js"></script>),
       %(<script type="text/javascript" src="/yui/build/utilities/utilities.js"></script>)
-    ].join("\n"), yui_javascript_include(:yahoo, :utilities)
+    ].join("\n"), yui_javascript_include_tag(:yahoo, :utilities)
   end
 
-  def test_yui_javascript_include_inserts_correct_script_tags_with_dependencies
+  def test_yui_javascript_include_tag_inserts_correct_script_tags_with_dependencies
     assert_dom_equal [
       %(<script type="text/javascript" src="/yui/build/yahoo/yahoo.js"></script>),
       %(<script type="text/javascript" src="/yui/build/dom/dom.js"></script>),
       %(<script type="text/javascript" src="/yui/build/event/event.js"></script>),
       %(<script type="text/javascript" src="/yui/build/animation/animation.js"></script>)
-    ].join("\n"), yui_javascript_include(:animation)
+    ].join("\n"), yui_javascript_include_tag(:animation)
 
     assert_dom_equal [
       %(<script type="text/javascript" src="/yui/build/yahoo/yahoo.js"></script>),
@@ -108,7 +108,7 @@ class AssetTagHelperTest < Test::Unit::TestCase
       %(<script type="text/javascript" src="/yui/build/element/element-beta.js"></script>),
       %(<script type="text/javascript" src="/yui/build/button/button.js"></script>),
       %(<script type="text/javascript" src="/yui/build/editor/editor-beta.js"></script>)
-    ].join("\n"), yui_javascript_include(:editor)
+    ].join("\n"), yui_javascript_include_tag(:editor)
   end
 
   def test_dependencies_for_component

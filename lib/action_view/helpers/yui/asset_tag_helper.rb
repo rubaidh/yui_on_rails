@@ -77,7 +77,7 @@ module ActionView # :nodoc:
           compute_public_path("#{source}#{suffix}", "yui/build/#{source}", 'js')
         end
 
-        def yui_javascript_include(*components)
+        def yui_javascript_include_tag(*components)
           options = components.extract_options!
 
           # Stringify components
