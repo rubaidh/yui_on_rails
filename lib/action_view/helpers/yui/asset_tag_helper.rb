@@ -86,6 +86,14 @@ module ActionView # :nodoc:
 
         CSS_COMPONENTS = [ "base", "fonts", "grids", "reset", "reset-fonts", "reset-fonts-grids"]
         CSS_COMPONENTS_WITHOUT_MINIFIED_VERSION = [ "reset-fonts", "reset-fonts-grids"]
+        CSS_COMPONENT_DEPENDENCIES = {
+          "base"              => [],
+          "fonts"             => [],
+          "grids"             => ["fonts"],
+          "reset"             => [],
+          "reset-fonts"       => [],
+          "reset-fonts-grids" => []
+        }
 
         def yui_javascript_path(source, version = nil)
           suffix = ""
@@ -106,6 +114,7 @@ module ActionView # :nodoc:
           paths = yui_js_components_with_dependencies(components).map do |component|
             yui_javascript_path(component)
           end
+
           component_stylesheets = components.select do |component|
             JS_COMPONENTS_WITH_CSS.include?(component)
           end
@@ -124,15 +133,23 @@ module ActionView # :nodoc:
         end
 
         def yui_js_components_with_dependencies(components)
-          components.map { |c| yui_js_component_with_dependencies(c) }.flatten.uniq
+          yui_components_with_dependencies(components, JS_COMPONENT_DEPENDENCIES)
         end
 
-        def yui_js_component_with_dependencies(component)
-          yui_js_dependencies_for_component(component) + [component]
+        def yui_css_components_with_dependencies(components)
+          yui_components_with_dependencies(components, CSS_COMPONENT_DEPENDENCIES)
         end
 
-        def yui_js_dependencies_for_component(component)
-          JS_COMPONENT_DEPENDENCIES[component] || []
+        def yui_components_with_dependencies(components, dependency_list)
+          components.map { |c| yui_component_with_dependencies(c, dependency_list) }.flatten.uniq
+        end
+
+        def yui_component_with_dependencies(component, dependency_list)
+          yui_dependencies_for_component(component, dependency_list) + [component]
+        end
+
+        def yui_dependencies_for_component(component, dependency_list)
+          dependency_list[component] || []
         end
 
         def yui_js_stylesheet_path(source)
@@ -142,6 +159,19 @@ module ActionView # :nodoc:
         def yui_stylesheet_path(source, version = nil)
           suffix = "-min" if "#{version}" == "min" && !CSS_COMPONENTS_WITHOUT_MINIFIED_VERSION.include?(source)
           compute_public_path("#{source}#{suffix}", "yui/build/#{source}", 'css')
+        end
+
+        def yui_stylesheet_link_tag(*components)
+          options = components.extract_options!
+
+          # Stringify components
+          components = components.map { |c| c.to_s }
+
+          paths = yui_css_components_with_dependencies(components).map do |component|
+            yui_stylesheet_path(component)
+          end
+          paths << options
+          stylesheet_link_tag(*paths)
         end
       end
     end

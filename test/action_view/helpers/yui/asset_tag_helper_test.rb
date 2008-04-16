@@ -123,28 +123,28 @@ class AssetTagHelperTest < Test::Unit::TestCase
   end
 
   def test_dependencies_for_component
-    assert_equal [],                                                                  yui_js_dependencies_for_component("yahoo")
-    assert_equal ["yahoo"],                                                           yui_js_dependencies_for_component("dom")
-    assert_equal ["yahoo", "dom", "event"],                                           yui_js_dependencies_for_component("animation")
-    assert_equal ["yahoo", "dom", "event", "container", "menu", "element", "button"], yui_js_dependencies_for_component("editor")
+    assert_equal [],                                                                  yui_dependencies_for_component("yahoo",     JS_COMPONENT_DEPENDENCIES)
+    assert_equal ["yahoo"],                                                           yui_dependencies_for_component("dom",       JS_COMPONENT_DEPENDENCIES)
+    assert_equal ["yahoo", "dom", "event"],                                           yui_dependencies_for_component("animation", JS_COMPONENT_DEPENDENCIES)
+    assert_equal ["yahoo", "dom", "event", "container", "menu", "element", "button"], yui_dependencies_for_component("editor",    JS_COMPONENT_DEPENDENCIES)
   end
 
   def test_component_with_dependencies
-    assert_equal ["yahoo"],                                                                     yui_js_component_with_dependencies("yahoo")
-    assert_equal ["yahoo", "dom"],                                                              yui_js_component_with_dependencies("dom")
-    assert_equal ["yahoo", "dom", "event", "animation"],                                        yui_js_component_with_dependencies("animation")
-    assert_equal ["yahoo", "dom", "event", "container", "menu", "element", "button", "editor"], yui_js_component_with_dependencies("editor")
+    assert_equal ["yahoo"],                                                                     yui_component_with_dependencies("yahoo",     JS_COMPONENT_DEPENDENCIES)
+    assert_equal ["yahoo", "dom"],                                                              yui_component_with_dependencies("dom",       JS_COMPONENT_DEPENDENCIES)
+    assert_equal ["yahoo", "dom", "event", "animation"],                                        yui_component_with_dependencies("animation", JS_COMPONENT_DEPENDENCIES)
+    assert_equal ["yahoo", "dom", "event", "container", "menu", "element", "button", "editor"], yui_component_with_dependencies("editor",    JS_COMPONENT_DEPENDENCIES)
   end
 
   def test_components_with_dependencies
-    assert_equal ["yahoo"],                                                                     yui_js_components_with_dependencies("yahoo")
-    assert_equal ["yahoo", "dom"],                                                              yui_js_components_with_dependencies("dom")
-    assert_equal ["yahoo", "dom", "event", "animation"],                                        yui_js_components_with_dependencies("animation")
-    assert_equal ["yahoo", "dom", "event", "container", "menu", "element", "button", "editor"], yui_js_components_with_dependencies("editor")
+    assert_equal ["yahoo"],                                                                     yui_components_with_dependencies("yahoo",     JS_COMPONENT_DEPENDENCIES)
+    assert_equal ["yahoo", "dom"],                                                              yui_components_with_dependencies("dom",       JS_COMPONENT_DEPENDENCIES)
+    assert_equal ["yahoo", "dom", "event", "animation"],                                        yui_components_with_dependencies("animation", JS_COMPONENT_DEPENDENCIES)
+    assert_equal ["yahoo", "dom", "event", "container", "menu", "element", "button", "editor"], yui_components_with_dependencies("editor",    JS_COMPONENT_DEPENDENCIES)
 
-    assert_equal ["yahoo", "dom", "event", "animation", "container", "menu", "element", "button", "editor"], yui_js_components_with_dependencies(["animation", "editor"])
-    assert_equal ["yahoo", "dom", "event", "container", "menu", "element", "button", "editor", "animation"], yui_js_components_with_dependencies(["editor", "animation"])
-    assert_equal ["yahoo", "dom", "event", "animation", "container", "menu", "element", "button", "editor"], yui_js_components_with_dependencies(["dom", "animation", "editor"])
+    assert_equal ["yahoo", "dom", "event", "animation", "container", "menu", "element", "button", "editor"], yui_components_with_dependencies(["animation", "editor"],        JS_COMPONENT_DEPENDENCIES)
+    assert_equal ["yahoo", "dom", "event", "container", "menu", "element", "button", "editor", "animation"], yui_components_with_dependencies(["editor", "animation"],        JS_COMPONENT_DEPENDENCIES)
+    assert_equal ["yahoo", "dom", "event", "animation", "container", "menu", "element", "button", "editor"], yui_components_with_dependencies(["dom", "animation", "editor"], JS_COMPONENT_DEPENDENCIES)
   end
 
   def test_yui_stylesheet_path_generates_correct_paths
@@ -175,6 +175,30 @@ class AssetTagHelperTest < Test::Unit::TestCase
       assert_equal "/yui/build/#{component}/assets/skins/sam/#{component}.css", path
       assert_yui_file_exists path
     end
+  end
+
+  def test_yui_stylesheet_link_tag_inserts_correct_link_tags
+    assert_dom_equal [
+      %(<link  type="text/css" rel="stylesheet" href="/yui/build/base/base.css" media="screen" />)
+    ].join("\n"), yui_stylesheet_link_tag(:base)
+
+    assert_dom_equal [
+      %(<link  type="text/css" rel="stylesheet" href="/yui/build/reset/reset.css" media="screen" />),
+      %(<link  type="text/css" rel="stylesheet" href="/yui/build/base/base.css" media="screen" />)
+    ].join("\n"), yui_stylesheet_link_tag(:reset, :base)
+  end
+
+  def test_yui_stylesheet_link_tag_inserts_correct_link_tags_with_dependencies
+    assert_dom_equal [
+      %(<link  type="text/css" rel="stylesheet" href="/yui/build/fonts/fonts.css" media="screen" />),
+      %(<link  type="text/css" rel="stylesheet" href="/yui/build/grids/grids.css" media="screen" />)
+    ].join("\n"), yui_stylesheet_link_tag(:grids)
+  end
+
+  def test_yui_stylesheet_link_tag_passes_media_options_through
+    assert_dom_equal [
+      %(<link  type="text/css" rel="stylesheet" href="/yui/build/base/base.css" media="print" />)
+    ].join("\n"), yui_stylesheet_link_tag(:base, :media => :print)
   end
 
   private
