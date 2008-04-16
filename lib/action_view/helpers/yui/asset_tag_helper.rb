@@ -111,11 +111,13 @@ module ActionView # :nodoc:
           end
 
           returning [] do |html|
+            paths << options
             html << javascript_include_tag(*paths)
             unless component_stylesheets.blank?
               stylesheet_paths = component_stylesheets.map do |component_stylesheet|
                 yui_js_stylesheet_path(component_stylesheet)
               end
+              stylesheet_paths << options
               html << stylesheet_link_tag(*stylesheet_paths)
             end
           end.join("\n")
