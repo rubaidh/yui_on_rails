@@ -1,0 +1,17 @@
+Autotest.add_hook :initialize do |at|
+  at.add_exception %r%^\./(?:tasks|resources)%
+  at.clear_mappings
+
+  at.add_mapping(%r(lib/.*\.rb$)) do |filename, _|
+    test_filename = filename.gsub(/^lib/, 'test').gsub(/\.rb$/, '_test.rb')
+    at.files_matching %r{^#{test_filename}$}
+  end
+
+  at.add_mapping %r{^test/test_helper.rb$} do |filename, _|
+    at.files_matching %r{test/.*_test\.rb$}
+  end
+
+  at.add_mapping %r{^test/.*\.rb$} do |filename, _|
+    filename
+  end
+end
