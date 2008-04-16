@@ -1,4 +1,4 @@
-require "#{File.dirname(__FILE__)}/test_helper"
+require "#{File.dirname(__FILE__)}/../../test_helper"
 
 class YuiTest < Test::Unit::TestCase
   def test_version_is_what_we_intend_it_to_be

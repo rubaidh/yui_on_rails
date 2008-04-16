@@ -1,4 +1,4 @@
-require "#{File.dirname(__FILE__)}/../test_helper"
+require "#{File.dirname(__FILE__)}/../../../test_helper"
 
 class CalendarHelperTest < Test::Unit::TestCase
   include ActionView::Helpers::YUI::CalendarHelper

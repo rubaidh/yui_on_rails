@@ -1,4 +1,4 @@
-require "#{File.dirname(__FILE__)}/../test_helper"
+require "#{File.dirname(__FILE__)}/../../../test_helper"
 
 # Mock out the +rails_asset_id+ method so it doesn't return different values
 # every time the file mtimes are changed.
@@ -15,19 +15,19 @@ class AssetTagHelperTest < Test::Unit::TestCase
     STABLE_JS_COMPONENTS.each do |component|
       path = yui_javascript_path(component)
       assert_equal "/yui/build/#{component}/#{component}.js", path
-      assert_file_exists "#{File.dirname(__FILE__)}/../../resources#{path}"
+      assert_yui_file_exists path
     end
 
     BETA_JS_COMPONENTS.each do |component|
       path = yui_javascript_path(component)
       assert_equal "/yui/build/#{component}/#{component}-beta.js", path
-      assert_file_exists "#{File.dirname(__FILE__)}/../../resources#{path}"
+      assert_yui_file_exists path
     end
 
     EXPERIMENTAL_JS_COMPONENTS.each do |component|
       path = yui_javascript_path(component)
       assert_equal "/yui/build/#{component}/#{component}-experimental.js", path
-      assert_file_exists "#{File.dirname(__FILE__)}/../../resources#{path}"
+      assert_yui_file_exists path
     end
   end
 
@@ -35,25 +35,25 @@ class AssetTagHelperTest < Test::Unit::TestCase
     (STABLE_JS_COMPONENTS - JS_COMPONENTS_WITHOUT_DEBUG_VERSION).each do |component|
       path = yui_javascript_path(component, :debug)
       assert_equal "/yui/build/#{component}/#{component}-debug.js", path
-      assert_file_exists "#{File.dirname(__FILE__)}/../../resources#{path}"
+      assert_yui_file_exists path
     end
 
     BETA_JS_COMPONENTS.each do |component|
       path = yui_javascript_path(component, :debug)
       assert_equal "/yui/build/#{component}/#{component}-beta-debug.js", path
-      assert_file_exists "#{File.dirname(__FILE__)}/../../resources#{path}"
+      assert_yui_file_exists path
     end
 
     EXPERIMENTAL_JS_COMPONENTS.each do |component|
       path = yui_javascript_path(component, :debug)
       assert_equal "/yui/build/#{component}/#{component}-experimental-debug.js", path
-      assert_file_exists "#{File.dirname(__FILE__)}/../../resources#{path}"
+      assert_yui_file_exists path
     end
 
     JS_COMPONENTS_WITHOUT_DEBUG_VERSION.each do |component|
       path = yui_javascript_path(component, :debug)
       assert_equal "/yui/build/#{component}/#{component}.js", path
-      assert_file_exists "#{File.dirname(__FILE__)}/../../resources#{path}"
+      assert_yui_file_exists path
     end
   end
 
@@ -61,25 +61,25 @@ class AssetTagHelperTest < Test::Unit::TestCase
     (STABLE_JS_COMPONENTS - JS_COMPONENTS_WITHOUT_MINIFIED_VERSION).each do |component|
       path = yui_javascript_path(component, :min)
       assert_equal "/yui/build/#{component}/#{component}-min.js", path
-      assert_file_exists "#{File.dirname(__FILE__)}/../../resources#{path}"
+      assert_yui_file_exists path
     end
 
     BETA_JS_COMPONENTS.each do |component|
       path = yui_javascript_path(component, :min)
       assert_equal "/yui/build/#{component}/#{component}-beta-min.js", path
-      assert_file_exists "#{File.dirname(__FILE__)}/../../resources#{path}"
+      assert_yui_file_exists path
     end
 
     EXPERIMENTAL_JS_COMPONENTS.each do |component|
       path = yui_javascript_path(component, :min)
       assert_equal "/yui/build/#{component}/#{component}-experimental-min.js", path
-      assert_file_exists "#{File.dirname(__FILE__)}/../../resources#{path}"
+      assert_yui_file_exists path
     end
 
     JS_COMPONENTS_WITHOUT_MINIFIED_VERSION.each do |component|
       path = yui_javascript_path(component, :min)
       assert_equal "/yui/build/#{component}/#{component}.js", path
-      assert_file_exists "#{File.dirname(__FILE__)}/../../resources#{path}"
+      assert_yui_file_exists path
     end
   end
 
@@ -151,7 +151,7 @@ class AssetTagHelperTest < Test::Unit::TestCase
     CSS_COMPONENTS.each do |component|
       path = yui_stylesheet_path(component)
       assert_equal "/yui/build/#{component}/#{component}.css", path
-      assert_file_exists "#{File.dirname(__FILE__)}/../../resources#{path}"
+      assert_yui_file_exists path
     end
   end
 
@@ -159,13 +159,13 @@ class AssetTagHelperTest < Test::Unit::TestCase
     (CSS_COMPONENTS - CSS_COMPONENTS_WITHOUT_MINIFIED_VERSION).each do |component|
       path = yui_stylesheet_path(component, :min)
       assert_equal "/yui/build/#{component}/#{component}-min.css", path
-      assert_file_exists "#{File.dirname(__FILE__)}/../../resources#{path}"
+      assert_yui_file_exists path
     end
 
     CSS_COMPONENTS_WITHOUT_MINIFIED_VERSION.each do |component|
       path = yui_stylesheet_path(component, :min)
       assert_equal "/yui/build/#{component}/#{component}.css", path
-      assert_file_exists "#{File.dirname(__FILE__)}/../../resources#{path}"
+      assert_yui_file_exists path
     end
   end
 
@@ -173,11 +173,15 @@ class AssetTagHelperTest < Test::Unit::TestCase
     JS_COMPONENTS_WITH_CSS.each do |component|
       path = yui_js_stylesheet_path(component)
       assert_equal "/yui/build/#{component}/assets/skins/sam/#{component}.css", path
-      assert_file_exists "#{File.dirname(__FILE__)}/../../resources#{path}"
+      assert_yui_file_exists path
     end
   end
 
   private
+  def assert_yui_file_exists(file)
+    assert_file_exists "#{PLUGIN_ROOT}/resources#{file}"
+  end
+
   def assert_file_exists(file)
     assert File.exists?(file), "File #{file} does not exist."
   end
