@@ -13,6 +13,3 @@
 * Devise a sane behaviour for ":cache => true" -- we probably want to extract
   the cache option and modify it slightly so that the cached file doesn't get
   called all.js.
-
-* Automatically incorporate CSS assets for Javascript components if required.
-  Allow people to specify a skin option for these assets.
