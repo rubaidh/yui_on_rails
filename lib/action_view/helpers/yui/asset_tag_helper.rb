@@ -163,6 +163,7 @@ module ActionView # :nodoc:
 
         def yui_stylesheet_link_tag(*components)
           options = components.extract_options!
+          options[:cache] = "yui" if options[:cache] == true
 
           # Stringify components
           components = components.map { |c| c.to_s }
