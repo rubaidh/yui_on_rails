@@ -112,7 +112,7 @@ module ActionView # :nodoc:
           components = components.map { |c| c.to_s }
 
           paths = yui_js_components_with_dependencies(components).map do |component|
-            yui_javascript_path(component)
+            yui_javascript_path(component, Rails.env.development? ? "debug" : "min")
           end
 
           component_stylesheets = components.select do |component|
@@ -168,7 +168,7 @@ module ActionView # :nodoc:
           components = components.map { |c| c.to_s }
 
           paths = yui_css_components_with_dependencies(components).map do |component|
-            yui_stylesheet_path(component)
+            yui_stylesheet_path(component, Rails.env.development? ? nil : "min")
           end
           paths << options
           stylesheet_link_tag(*paths)
