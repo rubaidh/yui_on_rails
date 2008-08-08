@@ -23,7 +23,7 @@ module ActionView # :nodoc:
         # humanized version of the field name.  If you explicitly set it to
         # blank (and don't set +close+) then the title bar will be omitted.
         def calendar_select(object_name, method, options = {}, html_options = {})
-          InstanceTag.new(object_name, method, self, nil, options.delete(:object)).to_calendar_select_tag(options, html_options)
+          InstanceTag.new(object_name, method, self, options.delete(:object)).to_calendar_select_tag(options, html_options)
         end
       end
     end
@@ -100,21 +100,21 @@ module ActionView # :nodoc:
       def year_dom_id()
         # FIXME: Magic numbers from #date_or_time_select's position hash.
         options = options_with_prefix(1, { :discard_type => true })
-        name_and_id_from_options(options, 'year')
+        _date_name_and_id_from_options(options, 'year')
         options[:id]
       end
 
       def month_dom_id()
         # FIXME: Magic numbers from #date_or_time_select's position hash.
         options = options_with_prefix(2, { :discard_type => true })
-        name_and_id_from_options(options, 'month')
+        _date_name_and_id_from_options(options, 'month')
         options[:id]
       end
 
       def day_dom_id()
         # FIXME: Magic numbers from #date_or_time_select's position hash.
         options = options_with_prefix(3, { :discard_type => true })
-        name_and_id_from_options(options, 'day')
+        _date_name_and_id_from_options(options, 'day')
         options[:id]
       end
 
