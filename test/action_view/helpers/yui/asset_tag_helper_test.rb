@@ -84,40 +84,40 @@ class AssetTagHelperTest < Test::Unit::TestCase
   end
 
   def test_yui_javascript_include_tag_inserts_correct_script_tags
-    assert_dom_equal %(<script type="text/javascript" src="/yui/build/yahoo/yahoo.js"></script>), yui_javascript_include_tag(:yahoo)
+    assert_dom_equal %(<script type="text/javascript" src="/yui/build/yahoo/yahoo-min.js"></script>), yui_javascript_include_tag(:yahoo)
     assert_dom_equal [
-      %(<script type="text/javascript" src="/yui/build/yahoo/yahoo.js"></script>),
+      %(<script type="text/javascript" src="/yui/build/yahoo/yahoo-min.js"></script>),
       %(<script type="text/javascript" src="/yui/build/utilities/utilities.js"></script>)
     ].join("\n"), yui_javascript_include_tag(:yahoo, :utilities)
   end
 
   def test_yui_javascript_include_tag_inserts_correct_script_tags_with_dependencies
     assert_dom_equal [
-      %(<script type="text/javascript" src="/yui/build/yahoo/yahoo.js"></script>),
-      %(<script type="text/javascript" src="/yui/build/dom/dom.js"></script>),
-      %(<script type="text/javascript" src="/yui/build/event/event.js"></script>),
-      %(<script type="text/javascript" src="/yui/build/animation/animation.js"></script>)
+      %(<script type="text/javascript" src="/yui/build/yahoo/yahoo-min.js"></script>),
+      %(<script type="text/javascript" src="/yui/build/dom/dom-min.js"></script>),
+      %(<script type="text/javascript" src="/yui/build/event/event-min.js"></script>),
+      %(<script type="text/javascript" src="/yui/build/animation/animation-min.js"></script>)
     ].join("\n"), yui_javascript_include_tag(:animation)
 
     assert_dom_equal [
-      %(<script type="text/javascript" src="/yui/build/yahoo/yahoo.js"></script>),
-      %(<script type="text/javascript" src="/yui/build/dom/dom.js"></script>),
-      %(<script type="text/javascript" src="/yui/build/event/event.js"></script>),
-      %(<script type="text/javascript" src="/yui/build/container/container.js"></script>),
-      %(<script type="text/javascript" src="/yui/build/menu/menu.js"></script>),
-      %(<script type="text/javascript" src="/yui/build/element/element-beta.js"></script>),
-      %(<script type="text/javascript" src="/yui/build/button/button.js"></script>),
-      %(<script type="text/javascript" src="/yui/build/editor/editor-beta.js"></script>),
+      %(<script type="text/javascript" src="/yui/build/yahoo/yahoo-min.js"></script>),
+      %(<script type="text/javascript" src="/yui/build/dom/dom-min.js"></script>),
+      %(<script type="text/javascript" src="/yui/build/event/event-min.js"></script>),
+      %(<script type="text/javascript" src="/yui/build/container/container-min.js"></script>),
+      %(<script type="text/javascript" src="/yui/build/menu/menu-min.js"></script>),
+      %(<script type="text/javascript" src="/yui/build/element/element-beta-min.js"></script>),
+      %(<script type="text/javascript" src="/yui/build/button/button-min.js"></script>),
+      %(<script type="text/javascript" src="/yui/build/editor/editor-beta-min.js"></script>),
       %(<link href="/yui/build/editor/assets/skins/sam/editor.css" rel="stylesheet" type="text/css" media="screen" />)
     ].join("\n"), yui_javascript_include_tag(:editor)
   end
 
   def test_yui_javascript_include_tag_also_includes_component_stylesheets
     assert_dom_equal [
-      %(<script type="text/javascript" src="/yui/build/yahoo/yahoo.js"></script>),
-      %(<script type="text/javascript" src="/yui/build/dom/dom.js"></script>),
-      %(<script type="text/javascript" src="/yui/build/event/event.js"></script>),
-      %(<script type="text/javascript" src="/yui/build/autocomplete/autocomplete.js"></script>),
+      %(<script type="text/javascript" src="/yui/build/yahoo/yahoo-min.js"></script>),
+      %(<script type="text/javascript" src="/yui/build/dom/dom-min.js"></script>),
+      %(<script type="text/javascript" src="/yui/build/event/event-min.js"></script>),
+      %(<script type="text/javascript" src="/yui/build/autocomplete/autocomplete-min.js"></script>),
       %(<link href="/yui/build/autocomplete/assets/skins/sam/autocomplete.css" rel="stylesheet" type="text/css" media="screen" />)
     ].join("\n"), yui_javascript_include_tag(:autocomplete)
   end
@@ -179,25 +179,25 @@ class AssetTagHelperTest < Test::Unit::TestCase
 
   def test_yui_stylesheet_link_tag_inserts_correct_link_tags
     assert_dom_equal [
-      %(<link  type="text/css" rel="stylesheet" href="/yui/build/base/base.css" media="screen" />)
+      %(<link  type="text/css" rel="stylesheet" href="/yui/build/base/base-min.css" media="screen" />)
     ].join("\n"), yui_stylesheet_link_tag(:base)
 
     assert_dom_equal [
-      %(<link  type="text/css" rel="stylesheet" href="/yui/build/reset/reset.css" media="screen" />),
-      %(<link  type="text/css" rel="stylesheet" href="/yui/build/base/base.css" media="screen" />)
+      %(<link  type="text/css" rel="stylesheet" href="/yui/build/reset/reset-min.css" media="screen" />),
+      %(<link  type="text/css" rel="stylesheet" href="/yui/build/base/base-min.css" media="screen" />)
     ].join("\n"), yui_stylesheet_link_tag(:reset, :base)
   end
 
   def test_yui_stylesheet_link_tag_inserts_correct_link_tags_with_dependencies
     assert_dom_equal [
-      %(<link  type="text/css" rel="stylesheet" href="/yui/build/fonts/fonts.css" media="screen" />),
-      %(<link  type="text/css" rel="stylesheet" href="/yui/build/grids/grids.css" media="screen" />)
+      %(<link  type="text/css" rel="stylesheet" href="/yui/build/fonts/fonts-min.css" media="screen" />),
+      %(<link  type="text/css" rel="stylesheet" href="/yui/build/grids/grids-min.css" media="screen" />)
     ].join("\n"), yui_stylesheet_link_tag(:grids)
   end
 
   def test_yui_stylesheet_link_tag_passes_media_options_through
     assert_dom_equal [
-      %(<link  type="text/css" rel="stylesheet" href="/yui/build/base/base.css" media="print" />)
+      %(<link  type="text/css" rel="stylesheet" href="/yui/build/base/base-min.css" media="print" />)
     ].join("\n"), yui_stylesheet_link_tag(:base, :media => :print)
   end
 
